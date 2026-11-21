@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Gap | Login</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="auth-page login-page-bg">
+    <div class="bg-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <div class="container" style="max-width: 520px; width: 90%;">
+        <div class="glass-card login-card">
+
+            <!-- Logo Section -->
+            <div class="hero-section" style="margin-bottom: 10px;">
+                <img src="/static/favicon.png" alt="Skill Gap AI"
+                    style="width: 60px; height: 60px; margin-bottom: 10px; border-radius: 14px;">
+                <h2 style="margin: 0; font-size: 1.5rem;">SkillGap <span style="color: var(--accent);">AI</span></h2>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 6px;">Login to your AI-driven
+                    career architect</p>
+            </div>
+
+            {% if error %}
+            <div
+                style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85em; border: 1px solid rgba(239, 68, 68, 0.2);">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <!-- Login Form -->
+            <form action="/login" method="POST">
+                <div class="input-wrapper full">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="name@example.com" required>
+                </div>
+                <div class="input-wrapper full">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div style="text-align: right; margin-top: 2px;">
+                    <a href="/forgot-password" id="forgot-password-link"
+                        style="color: rgba(255,255,255,0.6); font-size: 0.8rem; text-decoration: none; font-weight: 600; transition: all 0.3s ease;"
+                        onmouseover="this.style.color='#d946ef'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">
+                        Forgot Password?
+                    </a>
+                </div>
+
+                <button type="submit" class="cta-button" style="margin-top: 10px;">
+                    Enter Portal
+                </button>
+            </form>
+
+            <!-- Sign Up Link -->
+            <p style="margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+                New student? <a href="/register"
+                    style="color: #ffffff; text-decoration: underline; font-weight: 600;">Create Profile</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Intelligence | FutureProof AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .company-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .company-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .company-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .company-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+            margin-top: 20px;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            /* Adjust to center on line */
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid #1a1a2e;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #1e1e2d;
+            /* Fallback or match your theme's dark background */
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.95), rgba(40, 40, 60, 0.95));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease-out;
+            padding: 40px;
+            color: white;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 15px 25px;
+            border-radius: 30px;
+            color: white;
+            width: 100%;
+            max-width: 500px;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        /* Navbar Button Style needed here if not global */
+    </style>
+</head>
+
+<body class="dashboard-bg">
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <header style="margin-bottom: 40px;">
+            <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; padding: 25px 40px; margin-bottom: 0;">
+                <div style="text-align: left;">
+                    <h1 class="gradient-text" style="font-size: 2.5rem; margin: 0;">Company Intel</h1>
+                    <p style="opacity: 0.7; margin-top: 5px;">Insider tracking on recruitment & stacks</p>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <a href="/dashboard" class="sec-btn" style="text-decoration: none;">← Dashboard</a>
+                    <div
+                        style="display: flex; gap: 10px; background: #0c4a6e; padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15);">
+                        <a href="#" class="sec-btn active"
+                            style="background: var(--accent); color: white; border: none;">Companies</a>
+                        <a href="/profile" class="sec-btn"
+                            style="text-decoration: none; border: none; background: #075985;">Profile</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Tabs & Filters -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 40px;">
+                <div
+                    style="display: flex; gap: 10px; background: #0c4a6e; padding: 8px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15);">
+                    <button class="sec-btn active-tab" id="btnAll" onclick="setTab('all')" style="border: none;">All
+                        Companies</button>
+                    <button class="sec-btn" id="btnMNC" onclick="setTab('mnc')"
+                        style="border: none; background: #075985;">MNC Companies</button>
+                    <button class="sec-btn" id="btnFreshers" onclick="setTab('freshers')"
+                        style="border: none; background: #075985;">Freshers Hiring</button>
+                    <button class="sec-btn" id="btnInternships" onclick="setTab('internships')"
+                        style="border: none; background: #075985;">Internships</button>
+                </div>
+
+                <div style="display: flex; gap: 15px; width: 100%; max-width: 800px;">
+                    <input type="text" id="companySearch" class="search-bar"
+                        placeholder="Search by name, industry, or skills..." onkeyup="filterCompanies()"
+                        style="margin-bottom: 0; flex: 1;">
+
+                    <select id="industryFilter" class="search-bar" onchange="filterCompanies()"
+                        style="width: auto; margin-bottom: 0; padding: 10px 20px;">
+                        <option value="">All Industries</option>
+                        <option value="Banking">Banking</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Information Technology">IT/Tech</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Pharmaceuticals">Healthcare/Pharma</option>
+                        <option value="Energy">Energy/Power</option>
+                        <option value="Logistics">Logistics</option>
+                        <option value="Chemicals">Chemicals</option>
+                    </select>
+
+                    <select id="matchFilter" class="search-bar" onchange="filterCompanies()"
+                        style="width: auto; margin-bottom: 0; padding: 10px 20px;">
+                        <option value="0">All Matches</option>
+                        <option value="80">80%+ Match</option>
+                        <option value="50">50%+ Match</option>
+                        <option value="1">Any Match</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="company-grid" id="companyGrid">
+                {% for company in companies %}
+                <div class="company-card" data-id="{{ company.id }}" data-name="{{ company.name }}"
+                    data-industry="{{ company.industry }}" data-skills="{{ company.skills_required | join(',') }}"
+                    data-match="{{ company.match_score }}" data-type="{{ company.company_type }}"
+                    data-fresher="{{ 'true' if company.fresher_friendly else 'false' }}"
+                    data-internship="{{ 'true' if company.offers_internships else 'false' }}"
+                    onclick="openCompanyModal('{{ company.id }}')">
+
+                    <div
+                        style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                        <span class="badge-sm target"
+                            style="font-size: 0.8rem; padding: 4px 10px; border-radius: 20px;">
+                            {{ company.match_score }}% Match
+                        </span>
+                        {% if company.company_type == "MNC" %}
+                        <span class="badge-sm"
+                            style="background: rgba(14, 165, 233, 0.2); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3);">MNC</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="company-header">
+                        <div class="company-logo" style="background: {{ company.color }}; color: white;">
+                            {{ company.logo_text }}
+                        </div>
+                        <div style="max-width: 160px;">
+                            <h3
+                                style="margin: 0; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                {{ company.name }}</h3>
+                            <span style="font-size: 0.75rem; opacity: 0.7;">{{ company.industry }}</span>
+                        </div>
+                    </div>
+
+                    {% if company.fresher_friendly %}
+                    <div
+                        style="background: rgba(16, 185, 129, 0.1); border-radius: 8px; padding: 8px; margin-bottom: 15px;">
+                        <p style="margin: 0; font-size: 0.75rem; color: #10b981; font-weight: 600;">{{
+                            company.role_description }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div style="margin-bottom: 15px;">
+                        <span style="font-size: 0.75rem; color: var(--accent); font-weight: 600;">{{ company.difficulty
+                            }} Difficulty</span> &bull;
+                        <span style="font-size: 0.75rem; opacity: 0.8;">{{ company.experience }}</span>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="height: 55px; overflow: hidden;">
+                            {% for skill in company.skills_required[:4] %}
+                            <span class="tech-tag">{{ skill }}</span>
+                            {% endfor %}
+                            {% if company.skills_required|length > 4 %}
+                            <span style="font-size: 0.7rem; opacity: 0.5;">+{{ company.skills_required|length - 4 }}
+                                more</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: auto;">
+                        <button class="cta-button"
+                            onclick="event.stopPropagation(); applyNow('{{ company.name }}', '{{ company.career_page }}', '{{ company.id }}')"
+                            style="margin-top: 0; padding: 10px; font-size: 0.85rem; flex: 1;">
+                            Apply Now
+                        </button>
+                        <button class="sec-btn" style="padding: 10px; font-size: 0.85rem; flex: 1;">
+                            Details
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div id="noResults" style="display: none; text-align: center; padding: 50px; opacity: 0.7;">
+                <h3>No companies found in this category</h3>
+                <p id="fallbackText" style="margin-bottom: 20px;">Try switching tabs or adjusting your filters</p>
+                <button onclick="searchGoogleFallback()" class="cta-button" style="width: auto; padding: 12px 25px;">
+                    Search Careers on Google
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Dynamic Modal -->
+    <div id="companyModal" class="modal" onclick="if(event.target === this) closeCompanyModal()">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeCompanyModal()">&times;</button>
+            <div id="modalBody">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .active-tab {
+            background: var(--accent) !important;
+            color: white !important;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .match-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <!-- Data Injection for JS -->
+    <script>
+        const companiesData = {{ companies | tojson }};
+        let currentTab = 'all';
+
+        function setTab(tab) {
+            currentTab = tab;
+
+            // Update UI buttons
+            const buttons = ['btnAll', 'btnMNC', 'btnFreshers', 'btnInternships'];
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (id === 'btn' + tab.charAt(0).toUpperCase() + tab.slice(1) || (tab === 'all' && id === 'btnAll')) {
+                    btn.classList.add('active-tab');
+                    btn.style.background = 'var(--accent)';
+                } else {
+                    btn.classList.remove('active-tab');
+                    btn.style.background = '#1a4a5e';
+                }
+            });
+
+            filterCompanies();
+        }
+
+        function openCompanyModal(companyId) {
+            const company = companiesData.find(c => c.id === companyId);
+            if (!company) return;
+
+            const modalBody = document.getElementById('modalBody');
+
+            // Build Skills HTML
+            const matchedHTML = company.matched_skills.map(s => `<span class="tech-tag" style="border-color: #10b981; color: #10b981;">${s}</span>`).join('');
+            const missingHTML = company.missing_skills.map(s => `<span class="tech-tag" style="border-color: #f59e0b; color: #f59e0b;">${s}</span>`).join('');
+
+            modalBody.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center;">
+                        <div class="company-logo" style="background: ${company.color}; color: white; width: 60px; height: 60px; font-size: 1.5rem; margin-right: 20px;">
+                            ${company.logo_text}
+                        </div>
+                        <div>
+                            <h2 style="margin: 0; font-size: 2rem;">${company.name}</h2>
+                            <span style="opacity: 0.7;">${company.industry} • ${company.company_type}</span>
+                        </div>
+                    </div>
+                    <div class="badge-sm target" style="font-size: 1.2rem; padding: 10px 20px; border-radius: 30px;">
+                        ${company.match_score}% Match
+                    </div>
+                </div>
+
+                <div class="match-card">
+                    <h4 style="margin-top: 0; color: var(--accent);">Skill-to-MNC Matching Analysis</h4>
+                    <p style="font-size: 0.9rem; margin-bottom: 15px; border-left: 3px solid var(--accent); padding-left: 10px;">
+                        ${company.recommendation}
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 5px;">Matched Skills</p>
+                            <div>${matchedHTML || '<span style="font-size: 0.8rem; opacity: 0.5;">No direct matches yet</span>'}</div>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.8rem; opacity: 0.7; margin-bottom: 5px;">Skills to Build</p>
+                            <div>${missingHTML}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 class="gradient-text" style="margin-bottom: 15px; display: inline-block;">About</h3>
+                    <p style="opacity: 0.8; line-height: 1.6;">${company.about}</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div>
+                            <h5 style="margin-bottom: 8px;">Hiring Locations</h5>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                ${company.locations.map(l => `<span class="badge-sm">${l}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h5 style="margin-bottom: 8px;">Roles Offered</h5>
+                            <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                ${company.roles.map(r => `<span class="badge-sm" style="color: var(--accent);">${r}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-top: 40px;">
+                    <a href="${company.career_page}" target="_blank" class="cta-button" 
+                       onclick="return applyNow('${company.name}', '${company.career_page}', '${company.id}')"
+                       style="margin-top: 0; text-decoration: none; flex: 1;">
+                        Apply on Official Career Page
+                    </a>
+                    <button onclick="closeCompanyModal()" class="sec-btn" style="flex: 1;">Close</button>
+                </div>
+            `;
+
+            document.getElementById('companyModal').style.display = 'flex';
+        }
+
+        function applyNow(name, url, companyId) {
+            const company = companyId ? companiesData.find(c => c.id === companyId) : null;
+
+            let destinationUrl = "";
+            let message = "";
+            let redirectType = "google_search";
+
+            if (url && url !== "undefined" && url !== "" && url !== "None") {
+                destinationUrl = url;
+                message = `Redirecting to official career portal of ${name}`;
+                redirectType = "official_portal";
+            } else {
+                destinationUrl = `https://www.google.com/search?q=${encodeURIComponent(name)}+official+careers`;
+                message = `Official career page not found — searching on Google`;
+                redirectType = "google_search";
+            }
+
+            // Tracking Data
+            let jobType = "Experienced";
+            if (currentTab === 'freshers') jobType = "Fresher";
+            else if (currentTab === 'internships') jobType = "Internship";
+            else if (company) {
+                jobType = company.offers_internships ? "Internship" : (company.fresher_friendly ? "Fresher" : "Experienced");
+            }
+
+            const trackingData = {
+                company_name: name,
+                company_category: company ? company.company_type : "Unknown",
+                job_type: jobType,
+                redirect_type: redirectType,
+                skill_match_score: company ? `${company.match_score}%` : "0%",
+                user_skills: "{{ user.technical_skills }}",
+                device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Web"
+            };
+
+            // Send tracking event
+            fetch('/track_apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(trackingData)
+            }).catch(err => console.error("Tracking error:", err));
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Redirecting',
+                text: message,
+                background: '#1e1e2d',
+                color: '#fff',
+                confirmButtonColor: '#6366f1',
+                timer: 2000,
+                timerProgressBar: true
+            }).then(() => {
+                window.open(destinationUrl, '_blank');
+            });
+            return false;
+        }
+
+        function closeCompanyModal() {
+            document.getElementById('companyModal').style.display = 'none';
+        }
+
+        function filterCompanies() {
+            const query = document.getElementById('companySearch').value.toLowerCase();
+            const industry = document.getElementById('industryFilter').value;
+            const minMatch = parseInt(document.getElementById('matchFilter').value);
+
+            const cards = document.querySelectorAll('.company-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const cardIndustry = card.getAttribute('data-industry').toLowerCase();
+                const skills = card.getAttribute('data-skills').toLowerCase();
+                const match = parseInt(card.getAttribute('data-match'));
+
+                const type = card.getAttribute('data-type');
+                const isFresher = card.getAttribute('data-fresher') === 'true';
+                const isInternship = card.getAttribute('data-internship') === 'true';
+
+                // Tab Filter
+                let matchesTab = true;
+                if (currentTab === 'mnc') matchesTab = (type === 'MNC');
+                else if (currentTab === 'freshers') matchesTab = isFresher;
+                else if (currentTab === 'internships') matchesTab = isInternship;
+
+                // Value Filters
+                const matchesQuery = name.includes(query) || cardIndustry.includes(query) || skills.includes(query);
+                const matchesIndustry = industry === "" || cardIndustry.includes(industry.toLowerCase());
+                const matchesMatch = match >= minMatch;
+
+                if (matchesTab && matchesQuery && matchesIndustry && matchesMatch) {
+                    card.style.display = 'flex';
+                    card.style.flexDirection = 'column';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const noResults = document.getElementById('noResults');
+            const fallbackText = document.getElementById('fallbackText');
+
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+                if (query) {
+                    fallbackText.innerText = `No local matches found for "${query}". Try searching the official careers portal on Google:`;
+                } else {
+                    fallbackText.innerText = `No matches found. Try switching tabs or adjusting your filters.`;
+                }
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+
+        function searchGoogleFallback() {
+            const query = document.getElementById('companySearch').value;
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}+official+careers`;
+
+            // Log fallback search event
+            const trackingData = {
+                event_type: "fallback_search",
+                query: query,
+                timestamp: new Date().toISOString(),
+                user_id: "{{ user.student_id }}",
+                device: /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Web"
+            };
+
+            fetch('/track_apply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(trackingData)
+            }).catch(err => console.error("Tracking error:", err));
+
+            window.open(searchUrl, '_blank');
+        }
+
+        // Initialize display
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default tab on load if companies exist
+            setTab('all');
+        });
+    </script>
+</body>
+
+</html>

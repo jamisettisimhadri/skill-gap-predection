@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Analytics | FutureProof AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .chart-bar-container {
+            margin-top: 20px;
+        }
+
+        .chart-bar-item {
+            margin-bottom: 20px;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .progress-bg {
+            background: rgba(255, 255, 255, 0.05);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-glow));
+            border-radius: 6px;
+            transition: width 1s ease-out;
+        }
+
+        .trend-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .trend-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .trend-rank {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px var(--accent-glow);
+        }
+
+        .hero-stat {
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(45, 212, 191, 0.1));
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-number {
+            font-size: 4rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body class="dashboard-bg">
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <header style="margin-bottom: 40px;">
+            <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; padding: 25px 40px; margin-bottom: 0;">
+                <div style="text-align: left;">
+                    <h1 class="gradient-text" style="font-size: 2.5rem; margin: 0;">Platform Analytics</h1>
+                    <p style="opacity: 0.7; margin-top: 5px;">Real-time engagement & career trends</p>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <a href="/companies" class="sec-btn" style="text-decoration: none;">← Back to Companies</a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="hero-stat">
+                <span class="hero-number gradient-text">{{ total_applications }}</span>
+                <p style="font-size: 1.2rem; opacity: 0.8; font-weight: 500;">Total Application Intents Recorded</p>
+            </div>
+
+            <div class="analytics-grid">
+                <!-- Job Type Distribution -->
+                <div class="stat-card">
+                    <h3 style="margin-top: 0;">Job Type Distribution</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 25px;">Breakdown of student career
+                        interests</p>
+
+                    <div class="chart-bar-container">
+                        {% for type, val in distribution.items() %}
+                        <div class="chart-bar-item">
+                            <div class="chart-label">
+                                <span style="text-transform: capitalize;">{{ type }}</span>
+                                <span>{{ val }}</span>
+                            </div>
+                            <div class="progress-bg">
+                                <div class="progress-fill" style="width: {{ val }};"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Top Companies -->
+                <div class="stat-card">
+                    <h3 style="margin-top: 0;">Top Hiring Companies</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 25px;">Most applied companies on the
+                        platform</p>
+
+                    <div class="trend-list">
+                        {% for company in companies %}
+                        <div class="trend-item">
+                            <div class="trend-rank">{{ loop.index }}</div>
+                            <div style="font-weight: 600;">{{ company }}</div>
+                        </div>
+                        {% endfor %}
+                        {% if not companies %}
+                        <p style="text-align: center; opacity: 0.5; padding: 20px;">No application data yet</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Trending Skills -->
+                <div class="stat-card">
+                    <h3 style="margin-top: 0;">Trending Skills</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 25px;">Skills missing or matched in
+                        applications</p>
+
+                    <div class="trend-list">
+                        {% for skill in skills %}
+                        <div class="trend-item">
+                            <div class="trend-rank" style="background: var(--primary);">{{ loop.index }}</div>
+                            <div style="font-weight: 600;">{{ skill }}</div>
+                        </div>
+                        {% endfor %}
+                        {% if not skills %}
+                        <p style="text-align: center; opacity: 0.5; padding: 20px;">No skill data yet</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Personalized Industry Probability -->
+                <div class="stat-card">
+                    <h3 style="margin-top: 0;">Your Job Chances by Industry</h3>
+                    <p style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 25px;">Estimated probability based on your current skill profile</p>
+                    <div class="chart-bar-container">
+                        {% for item in industry_chances %}
+                        <div class="chart-bar-item">
+                            <div class="chart-label">
+                                <span style="font-weight: 600;">{{ item.name }}</span>
+                                <span class="gradient-text" style="font-weight: 800;">{{ item.score }}%</span>
+                            </div>
+                            <div class="progress-bg">
+                                <div class="progress-fill" style="width: {{ item.score }}%;"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% if not industry_chances %}
+                        <p style="text-align: center; opacity: 0.5; padding: 20px;">Complete your profile to see chances</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Skill Gap Predictor | Premium Career Architect</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="dashboard-bg">
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <nav class="glass-nav">
+        <div class="nav-content">
+            <a href="/" class="logo">FutureProof <span>AI</span></a>
+            <div class="nav-links">
+                <a href="/companies">Companies</a>
+                <a href="/profile">My Profile</a>
+                <a href="/logout" class="sec-btn">Sign Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header style="margin-top: 40px; margin-bottom: 40px;">
+            <div class="glass-card" style="padding: 25px 40px; margin-bottom: 0;">
+                <div style="text-align: left;">
+                    <h1 class="gradient-text" style="font-size: 3.5rem; line-height: 1.1;">Career Intelligence</h1>
+                    <p style="margin-top: 10px;">Hello <span style="color: var(--accent); font-weight: 800;">{{ user.fullname }}</span>, let's map
+                        your future.</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Form Section -->
+            <section id="input-section" class="glass-card">
+                <div class="section-title">
+                    <span>⚡</span>
+                    <span>Generate Career Analysis</span>
+                </div>
+
+                <form id="analysis-form">
+                    <div class="form-grid">
+                        <div class="input-wrapper full">
+                            <label>Full Name</label>
+                            <input type="text" id="name" value="{{ user.fullname }}" required>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>CGPA (10 Point Scale)</label>
+                            <input type="number" id="gpa" step="0.01" min="0" max="10" value="{{ user.cgpa }}">
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>Projects</label>
+                            <input type="number" id="projects" value="{{ user.projects }}">
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>Internships</label>
+                            <input type="number" id="internships" value="{{ user.internships }}">
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>Certifications</label>
+                            <input type="number" id="certifications" value="{{ user.certifications }}">
+                        </div>
+
+                        <div class="input-wrapper full">
+                            <label>Technical Stack (Comma Separated)</label>
+                            <input type="text" id="skills" value="{{ user.technical_skills }}">
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>Aptitude</label>
+                            <div class="range-control">
+                                <input type="range" id="aptitude" min="0" max="100" value="{{ user.problem_solving }}"
+                                    oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ user.problem_solving }}</output>
+                            </div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>Soft Skills</label>
+                            <div class="range-control">
+                                <input type="range" id="soft_skills" min="0" max="100" value="{{ user.communication }}"
+                                    oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ user.communication }}</output>
+                            </div>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>Technical Level</label>
+                            <div class="range-control">
+                                <input type="range" id="tech_skills" min="0" max="100" value="{{ user.communication }}"
+                                    oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ user.communication }}</output>
+                            </div>
+                        </div>
+
+                        <!-- New Roadmap Personalization Inputs -->
+                        <div class="input-wrapper">
+                            <label>Learning Pace</label>
+                            <select id="pace"
+                                style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white;">
+                                <option value="Normal">Normal (Balanced)</option>
+                                <option value="Slow">Relaxed (Weekend Learner)</option>
+                                <option value="Intensive">Intensive (Career Switch)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label>Daily Study Time (Hours)</label>
+                            <div class="range-control">
+                                <input type="range" id="daily_time" min="0.5" max="8" step="0.5" value="1.0"
+                                    oninput="this.nextElementSibling.value = this.value + ' hrs'">
+                                <output>1.0 hrs</output>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="cta-button">
+                        Start AI Analysis
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="hidden">
+                <div class="glass-card results-header" style="padding: 25px 40px; margin-bottom: 30px;">
+                    <h2 class="gradient-text" style="font-size: 2.2rem; margin: 0;">Analysis Complete</h2>
+                    <p id="student-greeting" style="margin-top: 8px; opacity: 0.8;"></p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="glass-card stat-card">
+                        <div class="stat-label">Recommended Career</div>
+                        <div class="stat-value career-value" id="res-career">--</div>
+                        <div id="recommendation-list"
+                            style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; display: none;">
+                            <p style="font-size: 0.75rem; opacity: 0.6; margin-bottom: 8px;">Top Career Matches:</p>
+                            <div id="career-suggestions-list"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card stat-card">
+                        <div class="stat-label">Predicted Level</div>
+                        <div class="stat-value" id="res-level">--</div>
+                    </div>
+
+                    <div class="glass-card stat-card">
+                        <div class="stat-label">Hireability Score</div>
+                        <div class="stat-value" id="res-prob" style="color: var(--success)">--%</div>
+                    </div>
+                </div>
+
+                <!-- Visualization Section -->
+                <div class="visualization-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; margin-bottom: 40px;">
+                    <div class="glass-card chart-container">
+                        <h3 class="roadmap-title">Skill Profile (Radar)</h3>
+                        <div style="height: 350px;">
+                            <canvas id="skillRadarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-card chart-container">
+                        <h3 class="roadmap-title">Strength vs Weakness (Bar)</h3>
+                        <div style="height: 350px;">
+                            <canvas id="skillBarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-card chart-container">
+                        <h3 class="roadmap-title">Skill Gap Analysis (Pie)</h3>
+                        <div style="height: 350px; display: flex; align-items: center; justify-content: center;">
+                            <div style="width: 300px; height: 300px;">
+                                <canvas id="skillPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card chart-container">
+                        <h3 class="roadmap-title">Growth Projection (Line)</h3>
+                        <div style="height: 350px;">
+                            <canvas id="skillLineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="roadmap-title">Personalized Skill Roadmap</h3>
+                    <div id="roadmap-container">
+                        <!-- Dynamic list -->
+                    </div>
+                </div>
+
+                <!-- Government Job Opportunities Section (NEW) -->
+                <div class="glass-card">
+                    <h3 class="roadmap-title">🏛️ Government Job Opportunities (Skill-Based)</h3>
+                    <p style="opacity: 0.7; margin-bottom: 20px;">Jobs matched to your actual skills, not just your
+                        degree</p>
+                    <div id="government-jobs-container">
+                        <!-- Dynamic job cards -->
+                    </div>
+                </div>
+
+                <button onclick="window.location.reload()" class="cta-button"
+                    style="background: white; border: 1px solid var(--glass-border); margin-top: 20px;">
+                    Analyze New Profile
+                </button>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/script.js?v=3"></script>
+</body>
+
+</html>

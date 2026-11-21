@@ -1,0 +1,236 @@
+[
+  {
+    "company_name": "Microsoft Corporation",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "25%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:25:31.215855Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "company_name": "Goldman Sachs",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "50%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:26:23.415361Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "company_name": "Goldman Sachs",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "50%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:26:46.502502Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "company_name": "Goldman Sachs",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "50%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:26:59.160251Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "50%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:27:50.822708Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Fresher",
+    "redirect_type": "official_portal",
+    "skill_match_score": "50%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:32:21.611542Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "company_name": "Indian Railway Finance Corp Ltd",
+    "company_category": "Indian",
+    "job_type": "Experienced",
+    "redirect_type": "google_search",
+    "skill_match_score": "25%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:35:09.519943Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "company_name": "Indian Railway Finance Corp Ltd",
+    "company_category": "Indian",
+    "job_type": "Experienced",
+    "redirect_type": "google_search",
+    "skill_match_score": "25%",
+    "user_skills": "Python, Java, Finance",
+    "device": "Web",
+    "timestamp": "2026-01-08T09:35:22.343175Z",
+    "user_id": "TEST1234"
+  },
+  {
+    "event_type": "fallback_search",
+    "query": "XyzCorp",
+    "timestamp": "2026-01-08T09:37:49.529665Z",
+    "user_id": "TEST1234",
+    "device": "Web"
+  },
+  {
+    "event_type": "fallback_search",
+    "query": "XyzCorp",
+    "timestamp": "2026-01-08T09:38:36.149951Z",
+    "user_id": "TEST1234",
+    "device": "Web"
+  },
+  {
+    "company_name": "Microsoft Corporation",
+    "company_category": "MNC",
+    "job_type": "Fresher",
+    "redirect_type": "official_portal",
+    "skill_match_score": "25%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-01-28T14:06:30.324014Z",
+    "user_id": "226C1A05000"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "0%",
+    "user_skills": "",
+    "device": "Web",
+    "timestamp": "2026-02-23T15:08:44.508293Z",
+    "user_id": "226C1A05017"
+  },
+  {
+    "company_name": "Johnson & Johnson",
+    "company_category": "MNC",
+    "job_type": "Experienced",
+    "redirect_type": "official_portal",
+    "skill_match_score": "0%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-02-28T10:03:37.922958Z",
+    "user_id": "226C1A05022"
+  },
+  {
+    "company_name": "Toyota Motor Corporation",
+    "company_category": "MNC",
+    "job_type": "Experienced",
+    "redirect_type": "official_portal",
+    "skill_match_score": "0%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-02-28T10:05:37.032734Z",
+    "user_id": "226C1A05022"
+  },
+  {
+    "company_name": "Toyota Motor Corporation",
+    "company_category": "MNC",
+    "job_type": "Experienced",
+    "redirect_type": "official_portal",
+    "skill_match_score": "0%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-02-28T10:05:52.175473Z",
+    "user_id": "226C1A05022"
+  },
+  {
+    "company_name": "Citigroup Inc.",
+    "company_category": "MNC",
+    "job_type": "Experienced",
+    "redirect_type": "official_portal",
+    "skill_match_score": "0%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-02-28T10:08:01.574063Z",
+    "user_id": "226C1A05022"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "25%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-03-12T06:55:53.403484Z",
+    "user_id": "226C1A050221g"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "25%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-03-12T06:56:01.992863Z",
+    "user_id": "226C1A050221g"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "25%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-03-12T06:56:34.292417Z",
+    "user_id": "226C1A050221g"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "25%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-03-12T06:56:49.354645Z",
+    "user_id": "226C1A050221g"
+  },
+  {
+    "company_name": "Infosys Limited",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "25%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-03-21T05:56:11.860190Z",
+    "user_id": "226C1A0558"
+  },
+  {
+    "company_name": "IBM",
+    "company_category": "MNC",
+    "job_type": "Internship",
+    "redirect_type": "official_portal",
+    "skill_match_score": "0%",
+    "user_skills": "python",
+    "device": "Web",
+    "timestamp": "2026-08-04T16:23:28.007551Z",
+    "user_id": "226C1A054111"
+  }
+]

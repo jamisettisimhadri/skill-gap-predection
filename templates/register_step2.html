@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 2: Academic Info | Skill Gateway AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="auth-page register-page-bg">
+    <div class="bg-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    <div class="container" style="max-width: 550px;">
+        <div class="glass-card">
+            <div class="hero-section">
+                <div class="ai-badge">STEP 02/03</div>
+                <h2>Academic & Technical</h2>
+                <p style="color: var(--text-dim); margin-bottom: 15px;">Tell us about your background and skills</p>
+            </div>
+
+            <div class="step-indicator">
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+                <div class="dot"></div>
+            </div>
+
+            {% if error %}
+            <div
+                style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; border: 1px solid rgba(239, 68, 68, 0.2);">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="{{ url_for('register_step2') }}" method="POST">
+                <div class="form-grid">
+                    <div class="input-wrapper full">
+                        <label>Course / Branch</label>
+                        <input type="text" name="course" placeholder="B.Tech Computer Science"
+                            value="{{ session.get('reg_data', {}).get('course', '') }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Year of Study</label>
+                        <select name="year">
+                            <option value="1st Year" {% if session.get('reg_data', {}).get('year')=='1st Year'
+                                %}selected{% endif %}>1st Year</option>
+                            <option value="2nd Year" {% if session.get('reg_data', {}).get('year')=='2nd Year'
+                                %}selected{% endif %}>2nd Year</option>
+                            <option value="3rd Year" {% if session.get('reg_data', {}).get('year')=='3rd Year'
+                                %}selected{% endif %}>3rd Year</option>
+                            <option value="4th Year" {% if session.get('reg_data', {}).get('year')=='4th Year'
+                                %}selected{% endif %}>4th Year</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>CGPA (10 Point Scale)</label>
+                        <input type="number" name="cgpa" step="0.01" min="0" max="10" placeholder="8.5"
+                            value="{{ session.get('reg_data', {}).get('cgpa', '') }}">
+                    </div>
+                    <div class="input-wrapper full">
+                        <label>Technical Skills (Comma separated)</label>
+                        <input type="text" name="skills" placeholder="Python, Java, Web Dev, React"
+                            value="{{ session.get('reg_data', {}).get('skills', '') }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Skill Level</label>
+                        <select name="skill_level">
+                            <option value="Beginner" {% if session.get('reg_data', {}).get('skill_level')=='Beginner'
+                                %}selected{% endif %}>Beginner</option>
+                            <option value="Intermediate" {% if session.get('reg_data',
+                                {}).get('skill_level')=='Intermediate' %}selected{% endif %}>Intermediate</option>
+                            <option value="Advanced" {% if session.get('reg_data', {}).get('skill_level')=='Advanced'
+                                %}selected{% endif %}>Advanced</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Career Interest</label>
+                        <select name="career_interest">
+                            <option value="Data Science" {% if session.get('reg_data',
+                                {}).get('career_interest')=='Data Science' %}selected{% endif %}>Data Science</option>
+                            <option value="Web Development" {% if session.get('reg_data',
+                                {}).get('career_interest')=='Web Development' %}selected{% endif %}>Web Development
+                            </option>
+                            <option value="Cloud Development" {% if session.get('reg_data',
+                                {}).get('career_interest')=='Cloud Development' %}selected{% endif %}>Cloud Development
+                            </option>
+                            <option value="Cybersecurity" {% if session.get('reg_data',
+                                {}).get('career_interest')=='Cybersecurity' %}selected{% endif %}>Cybersecurity</option>
+                            <option value="AI Engineer" {% if session.get('reg_data',
+                                {}).get('career_interest')=='AI Engineer' %}selected{% endif %}>AI Engineer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-top: 30px; display: flex; gap: 15px;">
+                    <a href="{{ url_for('register_step1') }}" class="cta-button"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); flex: 1; text-decoration: none; display: flex; align-items: center; justify-content: center;">Previous</a>
+                    <button type="submit" class="cta-button" style="flex: 2;">Next: Experience</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

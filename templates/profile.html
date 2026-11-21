@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | FutureProof AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .glass-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px 0;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .nav-links a:not(.sec-btn) {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:not(.sec-btn):hover {
+            color: var(--accent);
+        }
+
+        .nav-links .sec-btn {
+            padding: 12px 25px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links .sec-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 140px auto 100px;
+            padding: 20px;
+        }
+
+        .completion-wrapper {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.05);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            height: 100%;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(45, 212, 191, 0.1));
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .profile-section {
+            padding: 25px;
+        }
+
+        .profile-section h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .read-only {
+            background: rgba(255, 255, 255, 0.03) !important;
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            border-color: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .save-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        @media (max-width: 800px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-content {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-bg">
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav class="glass-nav">
+        <div class="nav-content">
+            <div class="logo">FutureProof <span>AI</span></div>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/companies">Companies</a>
+                <a href="/logout" class="sec-btn">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="completion-wrapper glass-card" style="padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4>Profile Completion Score</h4>
+                <span id="completion-text" style="font-weight: 800; color: var(--accent);">{{ completion }}%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-bar-fill" style="width: {{ completion }}%"></div>
+            </div>
+        </div>
+
+        <form id="profile-form">
+            <div class="profile-grid">
+                <!-- Basic Information -->
+                <div class="profile-section glass-card">
+                    <h3>👤 Basic Information</h3>
+                    <div class="input-wrapper">
+                        <label>Student ID</label>
+                        <input type="text" value="{{ user.student_id }}" class="read-only" readonly>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Full Name</label>
+                        <input type="text" name="fullname" value="{{ user.fullname }}" required>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Email</label>
+                        <input type="email" value="{{ user.email }}" class="read-only" readonly>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Mobile Number</label>
+                        <input type="text" name="mobile" value="{{ user.mobile }}">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="input-wrapper">
+                            <label>Age</label>
+                            <input type="number" name="age" value="{{ user.age }}">
+                        </div>
+                        <div class="input-wrapper">
+                            <label>Gender</label>
+                            <select name="gender">
+                                <option value="Male" {% if user.gender=='Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if user.gender=='Female' %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if user.gender=='Other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Date of Birth</label>
+                        <input type="date" name="dob" value="{{ user.dob }}">
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="profile-section glass-card">
+                    <h3>🎓 Academic Information</h3>
+                    <div class="input-wrapper">
+                        <label>Course / Branch</label>
+                        <input type="text" name="course" value="{{ user.course }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Year of Study</label>
+                        <select name="year">
+                            <option value="1st Year" {% if user.year=='1st Year' %}selected{% endif %}>1st Year</option>
+                            <option value="2nd Year" {% if user.year=='2nd Year' %}selected{% endif %}>2nd Year</option>
+                            <option value="3rd Year" {% if user.year=='3rd Year' %}selected{% endif %}>3rd Year</option>
+                            <option value="4th Year" {% if user.year=='4th Year' %}selected{% endif %}>4th Year</option>
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="input-wrapper">
+                            <label>10th Marks (%)</label>
+                            <input type="number" step="0.01" name="marks_10th" value="{{ user.marks_10th }}">
+                        </div>
+                        <div class="input-wrapper">
+                            <label>Inter Marks (%)</label>
+                            <input type="number" step="0.01" name="marks_inter" value="{{ user.marks_inter }}">
+                        </div>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>CGPA (10 Point Scale)</label>
+                        <input type="number" step="0.01" name="cgpa" value="{{ user.cgpa }}">
+                    </div>
+                </div>
+
+                <!-- Skill Information -->
+                <div class="profile-section glass-card">
+                    <h3>🛠️ Skill Information</h3>
+                    <div class="input-wrapper">
+                        <label>Technical Stack (Comma Separated)</label>
+                        <input type="text" name="technical_skills" value="{{ user.technical_skills or '' }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Skill Level</label>
+                        <select name="skill_level">
+                            <option value="Beginner" {% if user.skill_level=='Beginner' %}selected{% endif %}>Beginner
+                            </option>
+                            <option value="Intermediate" {% if user.skill_level=='Intermediate' %}selected{% endif %}>
+                                Intermediate</option>
+                            <option value="Advanced" {% if user.skill_level=='Advanced' %}selected{% endif %}>Advanced
+                            </option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Certifications (Count)</label>
+                        <input type="number" name="certifications" value="{{ user.certifications }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Internships (Count)</label>
+                        <input type="number" name="internships" value="{{ user.internships }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Projects Done (Count)</label>
+                        <input type="number" name="projects" value="{{ user.projects }}">
+                    </div>
+                </div>
+
+                <!-- Career Intelligence -->
+                <div class="profile-section glass-card">
+                    <h3>🚀 Career Intelligence</h3>
+                    <div class="user-avatar" style="background: var(--primary);">
+                        {{ user.name[0] | upper if user.name else 'U' }}
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Career Interest</label>
+                        <select name="career_interest">
+                            <option value="Data Scientist" {% if user.career_interest=='Data Scientist' %}selected{%
+                                endif %}>Data Scientist</option>
+                            <option value="AI Engineer" {% if user.career_interest=='AI Engineer' %}selected{% endif %}>
+                                AI Engineer</option>
+                            <option value="DevOps Engineer" {% if user.career_interest=='DevOps Engineer' %}selected{%
+                                endif %}>DevOps Engineer</option>
+                            <option value="Full Stack Developer" {% if user.career_interest=='Full Stack Developer'
+                                %}selected{% endif %}>Full Stack Developer</option>
+                            <option value="Cybersecurity Analyst" {% if user.career_interest=='Cybersecurity Analyst'
+                                %}selected{% endif %}>Cybersecurity Analyst</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Last AI Analysis Status</label>
+                        <div
+                            style="padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9rem;">
+                            Profile Ready for Prediction
+                        </div>
+                    </div>
+                    <hr style="opacity: 0.1; margin: 20px 0;">
+                    <div class="input-wrapper">
+                        <label>Soft Skills Assessment</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="input-wrapper">
+                                <label style="font-size: 0.7rem;">Leadership</label>
+                                <input type="number" name="leadership" value="{{ user.leadership }}">
+                            </div>
+                            <div class="input-wrapper">
+                                <label style="font-size: 0.7rem;">Teamwork</label>
+                                <input type="number" name="teamwork" value="{{ user.teamwork }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="save-bar">
+                <button type="submit" id="save-btn" class="cta-button" style="width: auto; padding: 12px 60px;">Save
+                    Profile Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('save-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Saving to Secure DB...';
+            btn.disabled = true;
+
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Update progress bar
+                    document.getElementById('progress-fill').style.width = result.completion + '%';
+                    document.getElementById('completion-text').innerText = result.completion + '%';
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Profile Updated!',
+                        text: 'Your career roadmap has been recalculated.',
+                        background: '#1e1e2d',
+                        color: '#fff',
+                        confirmButtonColor: '#0ea5e9',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Update Error',
+                        text: result.message,
+                        background: '#1e1e2d',
+                        color: '#fff',
+                        confirmButtonColor: '#ef4444'
+                    });
+                }
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'Server connection lost. Please try again.',
+                    background: '#1e1e2d',
+                    color: '#fff',
+                    confirmButtonColor: '#ef4444'
+                });
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

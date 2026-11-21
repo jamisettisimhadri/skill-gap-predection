@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 3: Experience | Skill Gateway AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="auth-page register-page-bg">
+    <div class="bg-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    <div class="container" style="max-width: 550px;">
+        <div class="glass-card">
+            <div class="hero-section">
+                <div class="ai-badge">STEP 03/03</div>
+                <h2>Experience & Security</h2>
+                <p style="color: var(--text-dim); margin-bottom: 15px;">Finalize your profile and set your password</p>
+            </div>
+
+            <div class="step-indicator">
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+                <div class="dot active"></div>
+            </div>
+
+            {% if error %}
+            <div
+                style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em; border: 1px solid rgba(239, 68, 68, 0.2);">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form id="reg-form" action="{{ url_for('register_step3') }}" method="POST">
+                <div class="form-grid">
+                    <div class="input-wrapper">
+                        <label>Projects Done</label>
+                        <input type="number" name="projects"
+                            value="{{ session.get('reg_data', {}).get('projects', '0') }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Internships</label>
+                        <input type="number" name="internships"
+                            value="{{ session.get('reg_data', {}).get('internships', '0') }}">
+                    </div>
+                    <div class="input-wrapper">
+                        <label>Certifications</label>
+                        <input type="number" name="certifications"
+                            value="{{ session.get('reg_data', {}).get('certifications', '0') }}">
+                    </div>
+                    <div class="input-wrapper full" style="margin-top: 15px;">
+                        <label>Create Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="input-wrapper full">
+                        <label>Confirm Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-top: 30px; display: flex; gap: 15px;">
+                    <a href="{{ url_for('register_step2') }}" class="cta-button"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); flex: 1; text-decoration: none; display: flex; align-items: center; justify-content: center;">Previous</a>
+                    <button type="submit" class="cta-button" style="flex: 2;">Complete Registration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('reg-form').addEventListener('submit', function (e) {
+            const pass = document.getElementById('password').value;
+            const conf = document.getElementById('confirm_password').value;
+
+            // Password validation rules
+            const minLength = pass.length >= 8;
+            const hasUpper = /[A-Z]/.test(pass);
+            const hasLower = /[a-z]/.test(pass);
+            const hasNumber = /[0-9]/.test(pass);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
+
+            if (!minLength || !hasUpper || !hasLower || !hasNumber || !hasSpecial) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Weak Password',
+                    html: `
+                        <div style="text-align: left; font-size: 0.9em; line-height: 1.6;">
+                            Password must meet these requirements:
+                            <ul style="margin-top: 10px;">
+                                <li style="color: ${minLength ? '#10b981' : '#ef4444'}">${minLength ? '✓' : '✗'} Minimum 8 characters</li>
+                                <li style="color: ${hasUpper ? '#10b981' : '#ef4444'}">${hasUpper ? '✓' : '✗'} At least 1 uppercase letter</li>
+                                <li style="color: ${hasLower ? '#10b981' : '#ef4444'}">${hasLower ? '✓' : '✗'} At least 1 lowercase letter</li>
+                                <li style="color: ${hasNumber ? '#10b981' : '#ef4444'}">${hasNumber ? '✓' : '✗'} At least 1 number</li>
+                                <li style="color: ${hasSpecial ? '#10b981' : '#ef4444'}">${hasSpecial ? '✓' : '✗'} At least 1 special character</li>
+                            </ul>
+                        </div>
+                    `,
+                    background: '#0f2d3d',
+                    color: '#fff',
+                    confirmButtonColor: '#d946ef'
+                });
+                return;
+            }
+
+            if (pass !== conf) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Passwords do not match!',
+                    background: '#0f2d3d',
+                    color: '#fff',
+                    confirmButtonColor: '#d946ef'
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
