@@ -43,7 +43,7 @@ app = Flask(__name__,
             static_folder=static_dir,
             static_url_path='/static')
 
-app.config['SECRET_KEY'] = 'future-proof-secret-dev-key'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
 # --- FLASK-MAIL CONFIGURATION ---
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
