@@ -1,8 +1,12 @@
-
-flask
+Flask
+Flask-Cors
+Flask-Login
+Flask-Mail
 pandas
 numpy
 scikit-learn
 joblib
 firebase-admin
-flask-login
+google-auth
+cachecontrol
+gunicorn
