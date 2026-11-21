@@ -10,8 +10,9 @@ from flask_mail import Mail, Message
 
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
-from pip._vendor import cachecontrol
+import cachecontrol
 import google.auth.transport.requests
+from firebase_admin import auth as firebase_auth
 
 # Add parent dir to path for package imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -43,7 +44,16 @@ app = Flask(__name__,
             static_folder=static_dir,
             static_url_path='/static')
 
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+# Flask needs a secret key for sessions (login, registration, Google OAuth).
+# Always set SECRET_KEY in production; for local development fall back to a
+# temporary random key so session-writing routes don't fail with a 500.
+_secret_key = os.environ.get('SECRET_KEY')
+if not _secret_key:
+    _secret_key = secrets.token_hex(32)
+    print("WARNING: SECRET_KEY is not set. Using a temporary random key; "
+          "sessions will be invalidated on restart. Set the SECRET_KEY "
+          "environment variable in production.")
+app.config['SECRET_KEY'] = _secret_key
 
 # --- FLASK-MAIL CONFIGURATION ---
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -159,8 +169,12 @@ logger = logging.getLogger(__name__)
 
 # --- GOOGLE OAUTH CONFIGURATION ---
 GOOGLE_CLIENT_ID = "263713427800-du23m8ql80thlpjneptgtjvcrjj7vn3i.apps.googleusercontent.com" # TODO: User must set this natively
-# Ensure session security
-app.config['SESSION_COOKIE_SECURE'] = True
+# Secure cookies are required over HTTPS (e.g. Render), but must be disabled
+# for local HTTP development or the browser drops the login cookie.
+_secure_cookie = os.environ.get('SESSION_COOKIE_SECURE')
+if _secure_cookie is None:
+    _secure_cookie = 'true' if os.environ.get('RENDER') == 'true' else 'false'
+app.config['SESSION_COOKIE_SECURE'] = _secure_cookie.lower() in ('1', 'true', 'yes')
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax' # Recommended for CSRF protection
 
@@ -497,7 +511,7 @@ def verify_firebase_phone():
             return jsonify({"status": "error", "message": "Missing ID Token."}), 400
             
         # Verify the Firebase ID Token
-        decoded_token = auth.verify_id_token(id_token)
+        decoded_token = firebase_auth.verify_id_token(id_token)
         phone_number = decoded_token.get('phone_number')
         
         if not phone_number:
