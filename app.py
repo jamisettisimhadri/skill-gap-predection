@@ -52,7 +52,7 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'simhadrijamisetti@gmail.com'
 # To the user: You will need to replace this with your real App Password from Google settings.
 # For now, it will throw an error and fallback to console printing if this password is wrong.
-app.config['MAIL_PASSWORD'] = 'vogjxdxfffhmmeiz' 
+app.config['MAIL_PASSWORD'] =  os.environ.get('MAIL_PASSWORD')
 app.config['MAIL_DEFAULT_SENDER'] = ('Skill Gap Predictor', 'simhadrijamisetti@gmail.com')
 
 mail = Mail(app)
